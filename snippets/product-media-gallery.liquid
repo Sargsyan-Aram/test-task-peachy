@@ -121,7 +121,6 @@
 
         {%- for media in product.media -%}
         {%- if media.alt contains first_available_color -%}
-          {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
             {%- liquid
               capture media_index
                 if media.media_type == 'model'
@@ -177,7 +176,6 @@
                 }}
               </button>
             </li>
-          {%- endunless -%}
         {%- endif -%}
         {%- endfor -%}
       </ul>

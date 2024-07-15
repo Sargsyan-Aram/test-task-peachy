@@ -51,7 +51,6 @@ function initColorChangeHandler() {
                 oneItemImg.setAttribute('alt', images[i].alt);
 
                 oneItemBtn.addEventListener('click', function () {
-                    console.log(11111)
                     mainImage.setAttribute('src', this.querySelector('img').getAttribute('src'));
                 })
 

@@ -691,6 +691,42 @@ class ModalOpener extends HTMLElement {
 
 customElements.define('modal-opener', ModalOpener);
 
+function mainImageClickHandler(e) {
+    if (e.target.matches('.product-main-image img')) {
+        const src = e.target.getAttribute('src').split('?')[0].split('//').pop();
+        const thumbnailList = document.querySelector('.thumbnail-list');
+        const activeImg = thumbnailList.querySelector(`img[src^="//${src}"]`);
+
+        if (activeImg) {
+            try {
+                const nextButton = activeImg.closest('li').nextElementSibling.querySelector('button');
+
+                if (nextButton) {
+                    nextButton.click();
+                    if (window.matchMedia('(max-width: 750px)').matches) {
+                        thumbnailList.scrollTo({left: nextButton.closest('li').offsetLeft, behavior: 'smooth'});
+                    } else {
+                        thumbnailList.scrollTo({top: nextButton.closest('li').offsetTop, behavior: 'smooth'});
+                    }
+
+                }
+            } catch (e) {
+                const firstButton = thumbnailList.querySelector('li').querySelector('button');
+
+                if (firstButton) {
+                    if (window.matchMedia('(max-width: 750px)').matches) {
+                        thumbnailList.scrollTo({left: 0, behavior: 'smooth'});
+                    } else {
+                        thumbnailList.scrollTo({top: 0, behavior: 'smooth'});
+                    }
+
+                    firstButton.click();
+                }
+            }
+        }
+    }
+}
+
 class DeferredMedia extends HTMLElement {
     constructor() {
         super();
@@ -739,43 +775,8 @@ class SliderComponent extends HTMLElement {
         this.prevButton.addEventListener('click', this.onButtonClick.bind(this));
         this.nextButton.addEventListener('click', this.onButtonClick.bind(this));
 
-        document.addEventListener('click', function(e) {
-            if (e.target.matches('.product-main-image img')) {
-                const src = e.target.getAttribute('src').split('?')[0].split('//').pop();
-
-                const thumbnailList = document.querySelector('.thumbnail-list');
-                const activeImg = thumbnailList.querySelector(`img[src^="//${src}"]`);
-
-                if (activeImg) {
-                    try {
-                        const nextButton = activeImg.closest('li').nextElementSibling.querySelector('button');
-
-                        if (nextButton) {
-                            nextButton.click();
-                            if (window.matchMedia('(max-width: 750px)').matches) {
-                                thumbnailList.scrollTo({ left: nextButton.closest('li').offsetLeft, behavior: 'smooth' });
-                            } else {
-                                thumbnailList.scrollTo({ top: nextButton.closest('li').offsetTop, behavior: 'smooth' });
-                            }
-
-                        }
-                    } catch (e) {
-                        const firstButton = thumbnailList.querySelector('li').querySelector('button');
-
-                        if (firstButton) {
-                            if (window.matchMedia('(max-width: 750px)').matches) {
-                                thumbnailList.scrollTo({ left: 0, behavior: 'smooth' });
-                            } else {
-                                thumbnailList.scrollTo({ top: 0, behavior: 'smooth' });
-                            }
-
-                            firstButton.click();
-
-                        }
-                    }
-                }
-            }
-        });
+        document.removeEventListener('click', mainImageClickHandler);
+        document.addEventListener('click', mainImageClickHandler);
     }
 
     initPages() {
@@ -841,7 +842,7 @@ class SliderComponent extends HTMLElement {
     setSlidePosition(position) {
         if (window.matchMedia('(max-width: 750px)').matches) {
             this.slider.scrollTo({
-                left    : position,
+                left: position,
             });
         } else {
             this.slider.scrollTo({
