@@ -22,7 +22,8 @@ function initColorChangeHandler() {
 
             thumbWrapper.innerHTML = '';
 
-            const mainImage = document.querySelector('li.is-active .product__media.media.media--transparent.product-main-image > img');
+            const mainImages = document.querySelectorAll('.product-main-image > img');
+
 
 
             for (let i = 0; i < images.length; i++) {
@@ -51,7 +52,9 @@ function initColorChangeHandler() {
                 oneItemImg.setAttribute('alt', images[i].alt);
 
                 oneItemBtn.addEventListener('click', function () {
-                    mainImage.setAttribute('src', this.querySelector('img').getAttribute('src'));
+                    mainImages.forEach(mainImage => {
+                        mainImage.setAttribute('src', this.querySelector('img').getAttribute('src'));
+                    });
                 })
 
                 oneItemBtn.appendChild(oneItemImg);
@@ -60,9 +63,11 @@ function initColorChangeHandler() {
             }
 
 
-            mainImage.setAttribute('src', images[0].src);
-            mainImage.setAttribute('srcset', '');
-            mainImage.setAttribute('alt', images[0].alt);
+            mainImages.forEach(mainImage => {
+                mainImage.setAttribute('src', images[0].src);
+                mainImage.setAttribute('srcset', '');
+                mainImage.setAttribute('alt', images[0].alt);
+            })
         });
     });
 }
